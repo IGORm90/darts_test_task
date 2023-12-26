@@ -8,7 +8,7 @@
 
   <!-- Bootstrap CSS via CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
+  <script src="/public/scripts/main.js"></script>
 </head>
 
 <body>

@@ -32,4 +32,19 @@ return [
         'action' => 'delete',
     ],
 
+    'set/create' => [
+        'controller' => 'set',
+        'action' => 'create',
+    ],
+
+    'set/get' => [
+        'controller' => 'set',
+        'action' => 'get',
+    ],
+
+    'set/delete/{id:\d+}' => [
+        'controller' => 'set',
+        'action' => 'delete',
+    ],
+
 ];
