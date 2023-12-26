@@ -56,10 +56,7 @@ $sql = "CREATE TABLE IF NOT EXISTS sets_items (
         product_id INT,
         child_id INT,
         UNIQUE KEY unique_set_product (set_id, product_id),
-        UNIQUE KEY unique_set_parent (set_id, parent_id),
-        FOREIGN KEY (set_id) REFERENCES `sets`(id),
-        FOREIGN KEY (product_id) REFERENCES products(id),
-        FOREIGN KEY (child_id) REFERENCES sets_items(id)
+        UNIQUE KEY unique_set_parent (set_id, parent_id)
     );";
 
 if ($pdo->exec($sql)) {
