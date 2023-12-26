@@ -17,6 +17,11 @@ return [
         'action' => 'newSet',
     ],
 
+    'set/{id:\d+}' => [
+        'controller' => 'page',
+        'action' => 'set',
+    ],
+
     'product/create' => [
         'controller' => 'product',
         'action' => 'create',

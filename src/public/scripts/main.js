@@ -26,7 +26,7 @@ window.onload = function() {
                 let selectHtml = '<div class="mb-3"><select class="form-select" name="sets[]">';
 
                 obj.sets.forEach((opt) => {
-                    selectHtml += `<option value="${opt.id}">${opt.name}</option>`;
+                    selectHtml += `<option value="${opt.id}">#${opt.id} ${opt.name}</option>`;
                 });
 
                 selectHtml += '</select></div>';

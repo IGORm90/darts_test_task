@@ -8,7 +8,15 @@ use Core\View;
 class SetController extends Controller {
 
     public function indexAction() {
+        return $this->model->get();
+    }
 
+    public function singleAction($id) {
+        return $this->model->single($id);
+    }
+
+    public function indexTreeAction() {
+        return $this->model->getTreeSets();
     }
 
     public function createAction() {
@@ -24,7 +32,11 @@ class SetController extends Controller {
     }
 
     public function deleteAction() {
-        
+        if ($this->model->delete($this->route['id'])) {
+            View::redirect('/');
+        }
+
+        View::redirect('/');
     }
 
 }

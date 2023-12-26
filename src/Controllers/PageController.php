@@ -17,8 +17,15 @@ class PageController extends Controller
       ]);
       $products = $product->indexAction();
 
+      $set = new SetController([
+         'controller' => 'set',
+         'action' => 'get',
+      ]);
+      $sets = $set->indexAction();
+
       $data = [
-         'products' => $products
+         'products' => $products,
+         'sets' => $sets
       ];
 
       $this->view->render('Главная', $data);
@@ -49,5 +56,16 @@ class PageController extends Controller
       ];
 
       $this->view->render('Создать набор', $data);
+   }
+
+   public function setAction()
+   {
+      $set = new SetController([
+         'controller' => 'set',
+         'action' => 'single',
+      ]);
+      $setData = $set->singleAction($this->route['id']);
+
+      $this->view->render('Набор', ['setData' => $setData]);
    }
 }

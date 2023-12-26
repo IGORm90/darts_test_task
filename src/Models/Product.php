@@ -24,6 +24,19 @@ class Product extends Model {
         $params = [
             'id' =>$id,
         ];
+
+        if(!$this->canDelete($id)) {
+            return false;
+        }
+
         $this->db->query('DELETE FROM products WHERE id = :id', $params);
+    }
+
+    private function canDelete($id){
+        $params = [
+            'id' => $id,
+        ];
+
+        return !(bool)$this->db->row('SELECT COUNT(*) as count FROM product_id WHERE child_id = :id', $params)[0]['count'];
     }
 }
