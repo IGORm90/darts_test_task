@@ -2,52 +2,65 @@
 
 namespace Core;
 
-class Router {
-    private $routes = [];
+use Core\View;
 
-    public function addRoute($method, $path, $controllerMethod) {
-        $this->routes[] = [
-            'method' => $method,
-            'path' => $path,
-            'controllerMethod' => $controllerMethod,
-        ];
+class Router
+{
+
+    protected $routes = [];
+    protected $params = [];
+
+    function __construct()
+    {
+        $arr = require __DIR__ . '/../config/routes.php';
+        foreach ($arr as $key => $val) {
+            $this->add($key, $val);
+        }
     }
 
-    public function handleRequest() {
-        $method = $_SERVER['REQUEST_METHOD'];
-        $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        var_dump($path);
-        var_dump($this->routes);
-        foreach ($this->routes as $route) {
-            if ($route['method'] === $method && $this->matchPath($route['path'], $path)) {
-                $this->callControllerMethod($route['controllerMethod']);
-                return;
+    public function add($route, $params){
+        $route = preg_replace('/{([a-z]+):([^\}]+)}/', '(?P<\1>\2)', $route);
+        $route = '#^'.$route.'$#';
+        $this->routes[$route] = $params;
+    }
+
+    public function match() {
+        $url = trim($_SERVER['REQUEST_URI'], '/');
+        foreach ($this->routes as $route => $params) {
+            if (preg_match($route, $url, $matches)) {
+                foreach ($matches as $key => $match) {
+                    if (is_string($key)) {
+                        if (is_numeric($match)) {
+                            $match = (int) $match;
+                        }
+                        $params[$key] = $match;
+                    }
+                }
+                $this->params = $params;
+                return true;
             }
         }
-
-        http_response_code(404);
-        echo "Not Found";
+        return false;
     }
 
-    private function matchPath($pattern, $path) {
-        $pattern = str_replace('/', '\/', $pattern);
-        $pattern = '/^' . $pattern . '$/';
-        return preg_match($pattern, $path);
-    }
+    public function run()
+    {
+        if ($this->match()) {
+            $path = 'Controllers\\' . ucfirst($this->params['controller']) . 'Controller';
 
-    private function callControllerMethod($controllerMethod) {
-        list($controllerName, $methodName) = explode('@', $controllerMethod);
-
-        if (class_exists($controllerName)) {
-            $controller = new ("\Controller\\" . $controllerName)();
-
-            if (method_exists($controller, $methodName)) {
-                $controller->$methodName();
+            if (class_exists($path)) {
+                $action = $this->params['action'] . 'Action';
+                if (method_exists($path, $action)) {
+                    $controller = new $path($this->params);
+                    $controller->$action();
+                } else {
+                    View::errorCode(404);
+                }
             } else {
-                echo "Method not found in controller.";
+                View::errorCode(404);
             }
         } else {
-            echo "Controller not found.";
+            View::errorCode(404);
         }
     }
 }

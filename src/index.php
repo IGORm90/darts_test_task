@@ -1,11 +1,7 @@
 <?php
 
-require('autoloader.php');
+require __DIR__ . '/Lib/Dev.php';
+require 'autoloader.php' ;
 
-use Core\Router;
-
-$router = new Router();
-
-$router->addRoute('GET', '/', 'MainController@index');
-
-$router->handleRequest();
+$router = new Core\Router;
+$router->run();
